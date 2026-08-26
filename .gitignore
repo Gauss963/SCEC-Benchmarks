@@ -1,0 +1,21 @@
+# Generated simulation output and figures - regenerate with the Slurm scripts
+tatva-simulation/output/
+tatva-simulation/Plot/
+
+# SCEC reference submissions - fetch with fetch_scec_reference.py
+tatva-simulation/reference/
+
+# Pre-merge copy of the driver, kept on disk only
+tatva-simulation/backup_before_refine_20260826/
+
+__pycache__/
+*.pyc
+.DS_Store
+._*
+
+# Published journal articles are not redistributed here
+HarrisBarallArchuleta2009a.pdf
+srl-2019248.1-2.pdf
+tmp/pdfs/HarrisBarallArchuleta2009a.txt
+tmp/pdfs/srl-2019248.1-2.txt
+tmp/pdfs/srl-2019248.txt

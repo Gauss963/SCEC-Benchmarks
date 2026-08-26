@@ -1,0 +1,201 @@
+                     SCEC Code Validation: TPV101
+             Rate-and-State Friction, Ageing Law, Whole-Space
+    Model Geometry: A planar fault lies in an isotropic, linear elastic whole-space. The
+    material on either side of the fault is characterized by its density ρ, S-wave speed cs, and
+    P-wave speed cp. The properties are given in the table below and are constant everywhere
+    in the medium.
+
+                  ρ                               cs                               cp
+              2670 kg/m3                      3.464 km/s                         6 km/s
+
+    To simplify later expressions, a coordinate system will be adopted in which the fault is
+    the plane z = 0 , with the hypocenter located at ( x 0 , y 0 ) = (0,7.5 km) . This is shown in the
+    figure below. The central portion of the fault, "W < x < W , 0 < y < W , with W = 15 km,
+    is velocity-weakening. A transition layer of width w = 3 km in which the frictional
+    properties continuously change from velocity-weakening to velocity-strengthening
+    !
+    surrounds the central velocity-weakening!    region of the fault. Outside of the transition
+                                           !                                   !
+    region, the fault is velocity-strengthening.
+                                                  !
+
+
+
+
+    Friction Law: Let " = (" x , " y ) be the shear traction vector (specifically, the traction
+    exerted by the positive side of the fault on the negative side), the magnitude of which is
+    " = " x2 + " y2 , and let σ be the normal stress acting on the fault, taken to be positive in
+    compression.! In terms of the components of the stress tensor " ij , " x = # zx , " y = # zy , and
+    " = #" zz . Let V = (Vx ,Vy ) be the slip velocity vector, the magnitude of which is
+!   V = Vx2 + Vy2 , and let " = ("x ,"y ) be the slip vector. Slip is defined as the displacement
+                                                            ! !            !
+!       !
+!                  !
+        discontinuity across the fault: "i = ui (x, y,0 + ) # ui (x, y,0# ) (i = x, y ) , where ui ( x, y,z) is the
+        displacement field. Likewise, Vi = v i (x, y,0 + ) " v i (x, y,0" ) (i = x, y ) , where v i ( x, y,z) is the
+        particle velocity. Finally, let θ be the state variable on the fault. The shear traction is
+        always equal to the shear
+                             !     strength of the fault, which is a function       ! of V, σ, and θ, as well
+        as the friction law parameters f0, V0, a, b, and L:
+                             !                                                      !
+                                                       +V       % f + bln(V0$ L) (.
+                                         " = a# arcsinh-     exp' 0              *0.             (1)
+                                                       , 2V0    &       a        )/
+
+        The state variable evolves according to the equation
+                      !                          d"      V"
+                                                    = 1#    .                                    (2)
+                                                 dt       L
+
+        The slip velocity vector points in the direction of the shear traction vector:
+                               !                 " V
+                                                  = .                                            (3)
+                                                 " V
+
+        The friction law parameters are given in the table below. Note that with the exception of
+        a, they are uniform on the fault.
+                            !
+                        f0                    V0            a(x,y)             b                 L
+                       0.6                 10-6 m/s     0.008+Δa(x,y)        0.012            0.02 m
+
+        To stop the rupture, the friction law changes from velocity-weakening in the rectangular
+        interior region of the fault to velocity-strengthening sufficiently far outside this region.
+        The transition occurs smoothly within a transition layer of width w = 3 km. Outside the
+        transition layer, the fault is made velocity-strengthening by increasing a by "a0 = 0.008 .
+                The change in a, which is added to the value of a in the velocity-weakening
+        interior of the fault, is
+                                                                   !
+                 "a(x, y) = "a 1# B x;W ,w B y # y ;W 2,w ,                 !        (4)
+                                 0   [       (        ) (       0       )]
+        in which
+    !                 1               1,                  x "W
+                      3 *
+                      31        $     w       w '-
+        B( x;W ,w ) = 2 ,1+ tanh&          +      )/, W < x < W + w                              (5)
+                      3 2 +,    % x # W # w x # W (./
+                      34              0,                x 0W + w
+
+        is a mathematically smooth version of the boxcar function (meaning that B and all of its
+        derivatives are continuous).
+!
+            Initial Conditions: At t = 0 , the fault is everywhere sliding in the horizontal direction
+            with initial velocity V = Vini . The initial shear stress on the fault, which is also horizontal,
+            is " ini , the normal stress is " ini , and the initial value of the state variable is " ini ( x, y ) . Note
+            that the initial!state variable is spatially variable, but the initial velocity and stresses are
+            uniform. This is because the initial conditions must be self-consistent, in the sense that
+                           !
+            they must satisfy (1). Since the friction law parameter a is spatially variable, then, in
+    !                           ! velocity and stress fields to be uniform, " ! must also be spatially
+            order for the initial                                                       ini
+            variable. The values of the initial conditions are given in the table below.
+
+                                  Vini              τini              σini                     θini(x,y)
+                                 -12                                                 !
+                               10    m/s          75 MPa            120 MPa           1.606238999213454×109 s
+                                                                                              + Δθ(x,y)
+                                                                                      = 50.899729562171359 yr
+                                                                                              + Δθ(x,y)
+
+            From equation (1), it follows that
+
+                               L     & aln(2sinh(# ini a$ ini )) % f 0 % a( x, y ) ln(Vini V0 ) )
+            " ini ( x, y ) =      exp(                                                          +.     (6)
+                               V0    '                           b                              *
+
+            In the medium surrounding the fault, the only nonzero stresses are the horizontal shear
+            stress and the normal stress component acting on the fault; these values are uniform and
+!           identical to those on the fault:
+
+                       " zx (x, y,z) = # ini and " zz (x, y,z) = $" ini at t = 0 .                     (7)
+
+            The medium is initially moving with equal and opposite horizontal velocities of Vini 2 on
+            the two sides of the fault:
+        !
+                                      # V 2, z > 0
+                       v x (x, y,z) = $ ini           at t = 0 .                                     ! (8)
+                                      %"Vini 2, z < 0
+
+            Displacement in the medium and slip on the fault are measured from zero at t = 0 .
+        ! Nucleation Method: Starting at t = 0 , rupture is nucleated by imposing a horizontal
+            shear traction perturbation (i.e., a perturbation to " x ) that depends on both space and
+                                                                                   !
+            time. The particular form is such that the perturbation smoothly grows from zero to its
+            maximum amplitude "# 0 over a finite time interval T, and is confined to a finite region
+                                        !
+            of the fault of radius R. The perturbation is mathematically smooth in time and space
+                                                          !
+            (i.e., the function and all derivatives are continuous). Specifically, the perturbation is
+                                !                          %            2             2(
+                                    "# ( x, y,t ) = "# 0 F ' ( x $ x 0 ) + ( y $ y 0 ) *G( t ) ,       (9)
+                                                           &                           )
+
+
+
+                   !
+in which
+
+                         * # r2 &
+                         ,exp             , r<R
+                F ( r) = + %$ r 2 " R 2 ('                                      (10)
+                         ,     0,           r)R
+                         -
+
+and
+      !                  * # t "T 2 &
+                         ,exp% (       ) (, 0 < t < T
+                G( t ) = + %$ t ( t " 2T ) ('         .                         (11)
+                         ,
+                         -        1,          t )T
+
+The perturbation is radially symmetric, with the radial distance away from the hypocenter
+                                            2             2
+along!the fault given by r =      ( x " x 0 ) + ( y " y 0 ) . The nucleation parameters are given
+in the table below.
+
+            "# 0                    R                         T                  (x0,y0)
+          25 MPa !                3 km                        1s               (0,7.5 km)
+
+!
+                 SCEC Code Validation: TPV102
+          Rate-and-State Friction, Ageing Law, Half-Space
+This problem is identical to TPV101, but the fault is embedded in a half-space rather than
+a whole-space. In terms of the coordinate system defined for TPV101, the half-space is
+the region y > 0 . The plane y = 0 is a free surface.
+
+
+
+!                 !
+            SCEC Code Validation: TPV101 and TPV102
+             Rate-and-State Friction, Required Output
+For both TPV101 and TPV102, the following data should be submitted to the code
+validation website (where instructions for the data file formats can be found):
+
+Time Histories of Fields at Fault Stations:
+
+       Report the complete time histories from t = 0 to t = 12 s of both components of
+       slip ( "x and "y ) and slip velocity ( Vx and Vy ), all tractions ( " x , " y , and " ), and the
+       base-10 logarithm of the state variable ( log10 " ) at each of the following nine
+       stations on the fault:             !        !
+  !       !                       !                            !            !
+           x (km)      0      0       0 !9          12      12 !−9 −12 −12
+           y (km)      3     7.5     12 !7.5        3       12     7.5       3          12
+
+
+
+
+Rupture Front Arrival Times:
+
+       Report the rupture front arrival time at all points within the velocity-weakening
+       portion of the fault ("W < x < W , 0 < y < W ) , where W = 15 km. The rupture
+       front arrival time is defined as the time at which the slip velocity, V, first exceeds
+       1 mm/s.
+                    !                                        !
+Time Histories of Fields at Free Surface Stations (TPV102 only):
+
+      Report the complete time histories from t = 0 to t = 12 s of all components of
+      displacement and particle velocity at each of the following six stations on the free
+      surface:
+                                       ! 12     ! 12
+             x (km)      0        0                         −12      −12
+             z (km)      9       −9        6       −6        6       −6
+
