@@ -20,6 +20,7 @@ split the same code in two and are no longer maintained.
 |---|---|
 | `tatva-simulation/` | Drivers, Slurm scripts, validation tooling, and benchmark notes |
 | `tatva-simulation/docs/` | Validation status, domain studies, and the refined-mesh runs |
+| `analysis/` | Rendering scripts for the rupture animations |
 | `tpv101_matlab/` | MATLAB helpers for the TPV101 initial conditions (`boxcar.m`, `input_DR1.m`, `load_DR1.m`) |
 | `tmp/tatva-simulation-prototypes/` | An abandoned explicit-integration prototype, kept for reference |
 | `tmp/pdfs/` | Text and page renders extracted from the SCEC benchmark documents |
@@ -42,7 +43,8 @@ what has and has not been verified.
 
 The refined runs also write the fault plane in the UGUCA binary dump format
 (`uguca_dump.py`), so a Tatva result and a UGUCA result can be read by the same
-analysis script and animated side by side.
+analysis script and animated side by side — see
+[analysis/README.md](analysis/README.md).
 
 ## What is not in the repository
 
