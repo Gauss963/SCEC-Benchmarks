@@ -21,6 +21,7 @@ split the same code in two and are no longer maintained.
 | `tatva-simulation/` | Drivers, Slurm scripts, validation tooling, and benchmark notes |
 | `tatva-simulation/docs/` | Validation status, domain studies, and the refined-mesh runs |
 | `analysis/` | Rendering scripts for the rupture animations |
+| `scec_upload/` | The TPV101 and TPV102 file sets ready for the SCEC verification server |
 | `tpv101_matlab/` | MATLAB helpers for the TPV101 initial conditions (`boxcar.m`, `input_DR1.m`, `load_DR1.m`) |
 | `tmp/tatva-simulation-prototypes/` | An abandoned explicit-integration prototype, kept for reference |
 | `tmp/pdfs/` | Text and page renders extracted from the SCEC benchmark documents |
