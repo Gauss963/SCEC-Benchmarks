@@ -1,6 +1,6 @@
 # SCEC TPV102 free-surface time series
 # problem=TPV102
-# author=Tatva validation workflow
+# author=Gauss T. Chang, National Taiwan University
 # date=2026-08-26
 # code=Tatva
 # code_version=TPV102-validation-1

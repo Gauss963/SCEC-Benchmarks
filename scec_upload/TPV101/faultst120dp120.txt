@@ -1,6 +1,6 @@
 # SCEC TPV101 on-fault time series
 # problem=TPV101
-# author=Tatva validation workflow
+# author=Gauss T. Chang, National Taiwan University
 # date=2026-08-26
 # code=Tatva
 # code_version=TPV101-validation-1
