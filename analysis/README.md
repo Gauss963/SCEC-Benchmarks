@@ -40,6 +40,25 @@ python analysis/TPVShearAnimation.py \
     --output-dir analysis/out/TPV101_UGUCA --vmin 30 --vmax 135 --overwrite
 ```
 
+### Stills for a document
+
+`--snapshot TIME` writes the single frame nearest that time instead of a video.
+A `.pdf` target keeps the axes, labels and colourbar as vector text and
+rasterises only the field itself at `--dpi`, and the surrounding white space is
+trimmed, so the file drops straight into a figure environment:
+
+```bash
+python analysis/TPVShearAnimation.py <dump base> \
+    --snapshot 6.0 --snapshot-path figures/tpv101_uguca_t6.pdf \
+    --vmin 30 --vmax 135 --width 1920 --height 1440 --dpi 300 --overwrite
+```
+
+`--width`, `--height` and `--dpi` set the physical size rather than a pixel
+count: 1920 x 1440 at 300 dpi is a 6.4 x 4.8 inch figure, and the type is sized
+from that. A still keeps the fault plane only, because two of them printed side
+by side at half the text width leave the station legend too small to read; pass
+`--snapshot-panels full` to keep the time series as well.
+
 Give both runs the same `--vmin/--vmax` and stack them for a side-by-side
 comparison:
 

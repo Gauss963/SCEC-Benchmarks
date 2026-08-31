@@ -265,9 +265,12 @@ def render_frames(
     vmin: float | None,
     vmax: float | None,
     cmap_name: str,
+    snapshot_time: float | None,
+    snapshot_path: Path | None,
+    snapshot_panels: str,
     overwrite: bool,
 ) -> tuple[int, float, float]:
-    """Render every dumped snapshot as a sequential 4:3 PNG image."""
+    """Render every dumped snapshot, or one still if ``snapshot_time`` is set."""
     if width * 3 != height * 4:
         raise ValueError(f"PNG size must be 4:3, got {width}x{height}")
     if plot_nodes < 2:
@@ -341,8 +344,11 @@ def render_frames(
     if color_max <= color_min:
         raise ValueError("vmax must be greater than vmin")
 
-    output_dir.mkdir(parents=True, exist_ok=True)
-    existing_frames = sorted(output_dir.glob("frame_*.png"))
+    # A still needs no frame directory; only the video path sweeps one clean.
+    existing_frames: list[Path] = []
+    if snapshot_time is None:
+        output_dir.mkdir(parents=True, exist_ok=True)
+        existing_frames = sorted(output_dir.glob("frame_*.png"))
     if existing_frames and not overwrite:
         raise FileExistsError(
             f"Found {len(existing_frames)} existing frames in {output_dir}; "
@@ -354,9 +360,11 @@ def render_frames(
     figure = plt.figure(figsize=(width / dpi, height / dpi), dpi=dpi, facecolor="white")
     map_axis = figure.add_axes((0.10, 0.42, 0.62, 0.47))
     colorbar_axis = figure.add_axes((0.755, 0.42, 0.022, 0.47))
-    series_axis = figure.add_axes((0.10, 0.08, 0.62, 0.24))
+    series_axis = figure.add_axes((0.10, 0.08, 0.72, 0.24))
 
-    font_scale = min(width / 800.0, height / 600.0)
+    # Physical size in inches, so the same layout works at any dpi. At the
+    # video's dpi of 100 this reduces to the previous width/800.
+    font_scale = min(width / dpi / 8.0, height / dpi / 6.0)
     title_font_size = 13.0 * font_scale
     label_font_size = 10.0 * font_scale
     tick_font_size = 9.0 * font_scale
@@ -469,7 +477,8 @@ def render_frames(
         framealpha=0.85,
     )
 
-    for index, time_seconds in enumerate(times):
+    def draw_frame(index: int) -> None:
+        time_seconds = float(times[index])
         image.set_data(frame_at(index))
         cursor.set_xdata([time_seconds, time_seconds])
         column = int(np.argmin(np.abs(station_times - time_seconds)))
@@ -483,6 +492,24 @@ def render_frames(
             fontsize=title_font_size,
             pad=6.0 * font_scale,
         )
+
+    if snapshot_time is not None:
+        # A still is normally printed at half the text width beside its
+        # counterpart from the other code, where the station legend would be
+        # too small to read. Keep the fault plane only unless asked otherwise.
+        if snapshot_panels == "map":
+            series_axis.remove()
+        drawn = save_snapshot(
+            figure, draw_frame, times, snapshot_time, snapshot_path,
+            dpi=dpi, overwrite=overwrite,
+        )
+        plt.close(figure)
+        print(f"Saved snapshot at t = {drawn:.3f} s: {snapshot_path}")
+        print(f"Fixed color range: {color_min:g} to {color_max:g} MPa")
+        return 1, drawn, drawn
+
+    for index, time_seconds in enumerate(times):
+        draw_frame(index)
         frame_path = output_dir / f"frame_{index:04d}.png"
         figure.savefig(frame_path, dpi=dpi, facecolor="white")
         if index == 0 or (index + 1) % 25 == 0 or index + 1 == times.size:
@@ -499,6 +526,33 @@ def render_frames(
     print(f"Stations: {station_source}")
     print(f"Fixed color range: {color_min:g} to {color_max:g} MPa")
     return times.size, float(times[0]), float(times[-1])
+
+
+def save_snapshot(
+    figure,
+    draw_frame,
+    times: np.ndarray,
+    snapshot_time: float,
+    output_path: Path,
+    *,
+    dpi: int,
+    overwrite: bool,
+) -> float:
+    """Draw the frame nearest ``snapshot_time`` and save it on its own.
+
+    ``bbox_inches="tight"`` trims the surrounding white space, which is what
+    makes the still usable in a document; a vector format such as PDF keeps the
+    axes and labels as text, with only the field itself rasterised at ``dpi``.
+    """
+    if output_path.exists() and not overwrite:
+        raise FileExistsError(f"Snapshot already exists: {output_path}")
+    index = int(np.argmin(np.abs(times - snapshot_time)))
+    draw_frame(index)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    figure.savefig(
+        output_path, dpi=dpi, facecolor="white", bbox_inches="tight", pad_inches=0.02
+    )
+    return float(times[index])
 
 
 def encode_video(
@@ -580,6 +634,24 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument("--vmin", type=float, help="Fixed lower color limit (MPa)")
     parser.add_argument("--vmax", type=float, help="Fixed upper color limit (MPa)")
     parser.add_argument("--cmap", default="viridis")
+    parser.add_argument(
+        "--snapshot",
+        type=float,
+        help="Save the single frame nearest this time (s) instead of a video",
+    )
+    parser.add_argument(
+        "--snapshot-panels",
+        choices=("map", "full"),
+        default="map",
+        help="Whether a still keeps the station time series below the fault "
+             "plane (default: map only, which stays legible at half width)",
+    )
+    parser.add_argument(
+        "--snapshot-path",
+        type=Path,
+        help="Where to write the still; a .pdf suffix keeps the axes vector "
+             "and rasterises only the field, at --dpi",
+    )
     parser.add_argument("--png-only", action="store_true")
     parser.add_argument("--keep-png", action="store_true")
     parser.add_argument("--overwrite", action="store_true")
@@ -617,6 +689,10 @@ def main() -> None:
         else output_dir / f"{dump_base.name}_shear_stress_{arguments.fps}fps.mp4"
     )
 
+    snapshot_path = arguments.snapshot_path
+    if arguments.snapshot is not None and snapshot_path is None:
+        snapshot_path = output_dir / f"{dump_base.name}_t{arguments.snapshot:g}.pdf"
+
     frame_count, first_time, last_time = render_frames(
         dump_base,
         output_dir,
@@ -632,8 +708,13 @@ def main() -> None:
         vmin=arguments.vmin,
         vmax=arguments.vmax,
         cmap_name=arguments.cmap,
+        snapshot_time=arguments.snapshot,
+        snapshot_path=snapshot_path,
+        snapshot_panels=arguments.snapshot_panels,
         overwrite=arguments.overwrite,
     )
+    if arguments.snapshot is not None:
+        return
     print(f"Physical time: {first_time:.6f} to {last_time:.6f} s ({frame_count} frames)")
 
     if not arguments.png_only:
